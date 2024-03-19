@@ -1,0 +1,38 @@
+function dijkstra(graph, start) {
+  const distances = {};
+  for (const vertex in graph) {
+    distances[vertex] = Infinity;
+  }
+  distances[start] = 0;
+
+  // Use a Set to keep track of unvisited vertices (priority queue alternative)
+  const unvisited = new Set(Object.keys(graph));
+
+  while (unvisited.size > 0) {
+    // Find the unvisited vertex with the shortest known distance
+    let closestVertex = null;
+    let minDistance = Infinity;
+    for (const vertex of unvisited) {
+      if (distances[vertex] <= minDistance) {
+        closestVertex = vertex;
+        minDistance = distances[vertex];
+      }
+    }
+
+    // Remove the closest vertex from unvisited
+    unvisited.delete(closestVertex);
+
+    // Explore neighbors of the closest vertex
+    for (const neighbor in graph[closestVertex]) {
+      const edgeWeight = graph[closestVertex][neighbor];
+      const newDistance = distances[closestVertex] + edgeWeight;
+
+      // Update distance if the new path is shorter
+      if (newDistance < distances[neighbor]) {
+        distances[neighbor] = newDistance;
+      }
+    }
+  }
+
+  return distances;
+}
